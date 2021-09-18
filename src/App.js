@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext,useContext } from "react";
 
 const themes = {
   light: {
@@ -19,6 +19,7 @@ export default function App() {
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
   });
 
   // penggunaan useState2
@@ -53,16 +54,32 @@ export default function App() {
       email: event.target.value,
     }));
   };
+  const handlePasswordInputChange = (event) => {
+    event.persist();
+    setValues((values) => ({
+      ...values,
+      password: event.target.value,
+    }));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(values.firstName && values.lastName && values.email){
+    if(values.firstName && values.lastName && values.email && values.password){
       setValid(true);
     }
     setSubmitted(true);
   }
+  
+  // penerapan useffect1
+  useEffect(() => {
+    if (values.password !== "") {
+      alert(`component will update & value ${values.password}`);
+    }
+  }, [values.password]);
+
+
   return (
-    <ThemeContext.Provider value={valueTheme}>
+    
     <div class="form-container" style={{ backgroundColor: valueTheme.background }}>
       <form class="register-form" onSubmit={handleSubmit}>
         {/* Uncomment the next line to show the success message */}
@@ -101,19 +118,56 @@ export default function App() {
         />
         {/* Uncomment the next line to show the error message */}
         {submitted && !values.email ? <span id="email-error">Please enter an email address</span> : null}
+        
+        <input
+          id="password"
+          class="form-field"
+          type="password"
+          placeholder="Your Password"
+          name="password"
+          value = {values.password}
+          onChange={handlePasswordInputChange}
+        />
+        {/* Uncomment the next line to show the error message */}
+       {submitted && !values.password ?  <span id="password-error">Please enter a password</span> : null}       
         <button class="form-field button" type="submit">
           Register
         </button>
-
+      
+      </form>
+      <ThemeContext.Provider value={valueTheme}>
+      <Content tema={valueTheme} />
         <button class="form-field1 button1" onClick={() =>setValueTheme(
               valueTheme === themes.light ? themes.dark : themes.light
             )
           }>
           Change Color 
         </button>
-        
-      </form>
+        </ThemeContext.Provider>
     </div>
-    </ThemeContext.Provider>
+  
   );
+  function Content(props) {
+    return (
+      <div>
+        <Text tema={props.tema} />
+      </div>
+    );
+  }
+  
+  function Text(props) {
+    // penerapan use context 1
+    const theme = useContext(ThemeContext);
+    return (
+        <p
+          // tinggal uncomment aja
+          // cara 1
+          style={{ color: 'white' ,fontFamily: 'Roboto', textAlign:'center'}}
+          // cara 2
+          // className={`titleContext ${theme === themes.light ? "dark" : "light"}`}
+        >
+         Warna Form {theme.background}
+        </p>
+    );
+  }
 }
