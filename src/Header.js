@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <div>
       <div>
-          <h1>Praktikum RPLBK Kelompok 27</h1>
+          <h1 style={{fontFamily:'Roboto', fontWeight:'bold', color:'white', textShadow:'2px 2px black', letterSpacing:'2px'}}>Praktikum RPLBK Kelompok 27</h1>
       </div>
       <hr />
       <br></br>
